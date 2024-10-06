@@ -1,16 +1,22 @@
-# image-filter-solution
-This repository includes code that scans a file for all images, identifies who is in each image, and creates a database with People and Images with columns that can be used for filtering.
+import sqlite3
 
+# Create a connection to a SQLite database
+conn = sqlite3.connect('wedding_photos.db')
 
-Database Schema:
+# Create a cursor object to execute SQL queries
+cursor = conn.cursor()
 
+# Creating DB tables 
+cursor.execute('''
 CREATE TABLE people (
     person_id INTEGER PRIMARY KEY,
     face_encoding BLOB, -- The face encoding (128-dimensional vector)
     name TEXT,          -- Will be NULL initially until manually assigned
     key_person BOOLEAN  -- Will be NULL or False initially
 );
+''')
 
+cursor.execute('''
 CREATE TABLE images (
     image_id INTEGER PRIMARY KEY,
     file_path TEXT,     -- Path to the image file
@@ -18,3 +24,9 @@ CREATE TABLE images (
     quality INTEGER,    -- Image quality score (1-10)
     people TEXT         -- Comma-separated person_ids detected in the image
 );
+
+''')
+
+# Commit changes and close the connection
+conn.commit()
+conn.close()
